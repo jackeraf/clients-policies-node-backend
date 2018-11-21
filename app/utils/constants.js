@@ -9,6 +9,7 @@ module.exports = {
         errors: {
             INVALID_ID: "Invalid ID",
             INVALID_NAME: "Invalid Name",
+            NO_RECORDS_FOUND: "No records found", 
             HTTP_ERROR: "Error from api mocky request",
             INVALID_EMAIL_OR_PASSWORD: "Invalid email or password",
             NO_TOKEN: "No token provided",

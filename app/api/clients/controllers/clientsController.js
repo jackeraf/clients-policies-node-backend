@@ -6,8 +6,7 @@ class ClientController{
 
     static getUserById(req, res){
         const id = req.params.id;
-        const clientService = new ClientService();
-        return clientService.getUserById(id).then(data=>{
+        return ClientService.getUserById(id).then(data=>{
             return res.json(data);
         })
         .catch(err=> res.status(err.statusCode).json(err))
@@ -16,8 +15,7 @@ class ClientController{
 
     static getClientByName(req, res){
         const name = req.params.name;
-        const clientService = new ClientService();
-        return clientService.getClientByName(name).then(data =>{
+        return ClientService.getClientByName(name).then(data =>{
             return res.json(data);
         })
         .catch(err=> res.status(err.statusCode).json(err))
@@ -26,8 +24,7 @@ class ClientController{
     static generateToken(req,res){
         const reqUserEmail = req.body.email;
         const reqUserPassword = req.body.password;
-        const clientsService = new ClientService();
-        return clientsService.generateToken(reqUserEmail, reqUserPassword)
+        return ClientService.generateToken(reqUserEmail, reqUserPassword)
         .then(({token, message})=>{
             res.header('x-auth-token',token);
             return res.send(message);

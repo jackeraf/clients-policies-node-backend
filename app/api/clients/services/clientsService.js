@@ -3,46 +3,46 @@
 const {
     validators,
     constants,
-    ApiError,
     axios
 } = require('../../../utils/serviceUtils');
 
-const users = require('../../../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const users = require('../../../models/users');
+const errorFactory = require('../../../utils/errorFactory');
+
+let _serviceDataModel = {
+    clientsUrl: constants.urls.clients
+};
 
 class ClientService{
-
-    constructor(){
-        this.clientsUrl = constants.urls.clients;
-    }
-    getUserById(id){
+    static getUserById(id){
         if(validators.idValidator(id)){
-            return axios.get(this.clientsUrl)
+            return axios.get(_serviceDataModel.clientsUrl)
             .then(function (response) {
                 const {data} = response;
                 const client = data.clients.find(client => client.id === id);
                 return client;
             })
-            .catch(err=> new ApiError(500,err,constants.api.errors.HTTP_ERROR));
+            .catch(err=> errorFactory(500,err,constants.api.errors.HTTP_ERROR));
         }
-        return Promise.reject(new ApiError(400, null, constants.api.errors.INVALID_ID));
+        return Promise.reject(errorFactory(400, null, constants.api.errors.INVALID_ID));
     }
 
-    getClientByName(name){
+    static getClientByName(name){
         if(validators.nameValidator(name)){
-            return axios.get(this.clientsUrl)
+            return axios.get(_serviceDataModel.clientsUrl)
             .then(function (response) {
                 const {data} = response;
                 const clients = data.clients.filter(client => client.name === name);
                 return clients;
             })
-            .catch(err=> new ApiError(500,err,constants.api.errors.HTTP_ERROR));
+            .catch(err=> errorFactory(500,err,constants.api.errors.HTTP_ERROR));
         }
-        return Promise.reject(new ApiError(400, null, constants.api.errors.INVALID_NAME));
+        return Promise.reject(errorFactory(400, null, constants.api.errors.INVALID_NAME));
     }
 
-    generateToken(reqUserEmail, reqUserPassword){
+    static generateToken(reqUserEmail, reqUserPassword){
         let targetUser = null;
         for(let user in users){
             if(users[user]["email"] === reqUserEmail){
@@ -64,7 +64,7 @@ class ClientService{
                 return {token,message: constants.api.success.VALID_USER};
             })
         }
-        return Promise.reject(new ApiError(400, null, constants.api.errors.USER_DOESNT_EXIST));
+        return Promise.reject(errorFactory(400, null, constants.api.errors.USER_DOESNT_EXIST));
     }
 }
 
